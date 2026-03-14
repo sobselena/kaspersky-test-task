@@ -2,6 +2,7 @@ import classNames from 'classnames';
 
 import type { User } from '../../../../types/user';
 import styles from './table-card.module.scss';
+import { AppLoader } from '../../../../components/app-loader';
 type Props = {
   data: User[] | undefined;
   isFetching: boolean;
@@ -39,7 +40,13 @@ export const TableCard = ({ data, isFetching }: Props) => (
       </thead>
 
       <tbody>
-        {isFetching && <p>Loading...</p>}
+        {isFetching && (
+          <tr>
+            <td colSpan={6}>
+              <AppLoader />
+            </td>
+          </tr>
+        )}
         {data?.map((userData) => (
           <tr className={styles.row} key={userData.id}>
             <td className={styles.checkboxCell}>
