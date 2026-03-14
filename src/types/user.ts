@@ -3,5 +3,5 @@ export type User = {
   name: string;
   email: string;
   phone: string;
-  group: string;
+  jobType: string;
 };
