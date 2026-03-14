@@ -7,6 +7,8 @@ import { USERS_PAGINATION } from '../../constants/pagination';
 import { Pagination } from '../../components/pagination';
 import { useState } from 'react';
 import { UserModal } from './user-modal/user-modal';
+import { useDispatch } from 'react-redux';
+import { deleteUser } from '../../redux/reducers';
 
 export const UsersPage = () => {
   const { data, isFetching } = useGetAllUsersQuery();
@@ -18,6 +20,11 @@ export const UsersPage = () => {
 
   const users = data?.slice(lastPage - USERS_PAGINATION, lastPage);
   console.log(users);
+  const dispatch = useDispatch();
+  function onAdd() {
+    dispatch(deleteUser());
+    setOpenModal(true);
+  }
   return (
     <main className={styles.page}>
       <header>
@@ -41,7 +48,7 @@ export const UsersPage = () => {
 
         <JobSelector data={data} />
 
-        <button className={styles.addButton} onClick={() => setOpenModal(true)}>
+        <button className={styles.addButton} onClick={onAdd}>
           <svg className={styles.icon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path d="M12 4v16m8-8H4" strokeWidth="2.5" strokeLinecap="round" />
           </svg>
@@ -49,7 +56,7 @@ export const UsersPage = () => {
         </button>
       </div>
 
-      <TableCard data={users} isFetching={isFetching} />
+      <TableCard data={users} isFetching={isFetching} openModal={() => setOpenModal(true)} />
 
       <Pagination total={data?.length} />
 

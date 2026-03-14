@@ -11,7 +11,7 @@ export const Pagination = ({ total = 0 }: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const currentPage = Number(searchParams.get('page')) || 1;
-  const totalPages = Math.ceil(total / USERS_PAGINATION);
+  const totalPages = Math.ceil(total / USERS_PAGINATION) || 1;
 
   const changePage = (page: number) => {
     setSearchParams({ page: String(page) });

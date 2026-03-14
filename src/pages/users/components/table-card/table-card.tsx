@@ -4,18 +4,26 @@ import type { User } from '../../../../types/user';
 import styles from './table-card.module.scss';
 import { AppLoader } from '../../../../components/app-loader';
 import { useDeleteUserMutation } from '../../../../redux/api';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../../../redux/reducers';
 
 type Props = {
   data: User[] | undefined;
   isFetching: boolean;
+  openModal: () => void;
 };
 
-export const TableCard = ({ data, isFetching }: Props) => {
+export const TableCard = ({ data, isFetching, openModal }: Props) => {
   const [deleteUser] = useDeleteUserMutation();
   const onDelete = async (id: string | null) => {
     if (!id) return;
 
     await deleteUser(id);
+  };
+  const dispatch = useDispatch();
+  const onEdit = (userData: User) => {
+    dispatch(setUser(userData));
+    openModal();
   };
 
   return (
@@ -90,7 +98,10 @@ export const TableCard = ({ data, isFetching }: Props) => {
               </td>
 
               <td>
-                <div className={`${styles.cell} ${styles.actionsCell}`}>
+                <div
+                  className={`${styles.cell} ${styles.actionsCell}`}
+                  onClick={() => onEdit(userData)}
+                >
                   <button className={styles.iconButton}>
                     <svg
                       className={styles.smallIcon}

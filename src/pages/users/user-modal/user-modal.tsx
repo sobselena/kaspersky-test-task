@@ -4,8 +4,10 @@ import { useForm } from 'react-hook-form';
 import { userSchema } from './user.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormRow } from '../form-row';
-import { useCreaetUserMutation } from '../../../redux/api';
+import { useCreateUserMutation, useEditUserMutation } from '../../../redux/api';
 import type { User } from '../../../types/user';
+import { useUserSelector } from '../../../redux/selectors';
+import { useEffect } from 'react';
 type Props = {
   isOpen: boolean;
   onClose: () => void;
@@ -16,15 +18,30 @@ export const UserModal = ({ isOpen, onClose, title = 'Сотрудник' }: Pro
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(userSchema),
   });
-  const [createUser] = useCreaetUserMutation();
+
+  const [createUser] = useCreateUserMutation();
+  const [editUser] = useEditUserMutation();
   async function onSubmit(data: Omit<User, 'id'>) {
-    await createUser(data);
+    await (userData.id ? editUser({ id: userData.id, ...data }) : createUser(data));
     onClose();
   }
+
+  const userData = useUserSelector();
+  useEffect(() => {
+    reset({
+      fullName: userData.fullName || '',
+      email: userData.email || '',
+      phone: userData.phone || '',
+      jobType: userData.jobType || '',
+    });
+  }, [userData, reset]);
+
+  console.log(userData);
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title}>
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
@@ -74,7 +91,7 @@ export const UserModal = ({ isOpen, onClose, title = 'Сотрудник' }: Pro
           </button>
 
           <button type="submit" className={styles.submit}>
-            Сохранить
+            {userData.id ? 'Изменить' : 'Создать'}
           </button>
         </div>
       </form>

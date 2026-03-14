@@ -7,6 +7,7 @@ export const usersApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://69b534c8be587338e7154cca.mockapi.io/',
   }),
+
   tagTypes: ['Users'],
   endpoints: (builder) => ({
     getAllUsers: builder.query<User[], void>({
@@ -30,7 +31,7 @@ export const usersApi = createApi({
 
       invalidatesTags: ['Users'],
     }),
-    creaetUser: builder.mutation<void, Omit<User, 'id'>>({
+    createUser: builder.mutation<void, Omit<User, 'id'>>({
       query: (userData) => ({
         url: `users`,
         method: 'POST',
@@ -48,7 +49,28 @@ export const usersApi = createApi({
 
       invalidatesTags: ['Users'],
     }),
+    editUser: builder.mutation<void, User>({
+      query: (userData) => ({
+        url: `users/${userData.id}`,
+        method: 'PUT',
+        body: userData,
+      }),
+      onQueryStarted: async (_, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+          singleToast('Изменили данные сотрудника (˶˃⤙˂˶)');
+        } catch {
+          singleToast('Сотрудник на консерваторе (..◜ᴗ◝..)');
+        }
+      },
+      invalidatesTags: ['Users'],
+    }),
   }),
 });
 
-export const { useGetAllUsersQuery, useDeleteUserMutation, useCreaetUserMutation } = usersApi;
+export const {
+  useGetAllUsersQuery,
+  useDeleteUserMutation,
+  useCreateUserMutation,
+  useEditUserMutation,
+} = usersApi;
