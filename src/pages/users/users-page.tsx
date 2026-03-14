@@ -1,11 +1,20 @@
+import { useSearchParams } from 'react-router';
 import { useGetAllUsersQuery } from '../../redux/api';
 import { TableCard } from './components/table-card';
 import { JobSelector } from './job-selector';
 import styles from './users-page.module.scss';
+import { USERS_PAGINATION } from '../../constants/pagination';
+import { Pagination } from '../../components/pagination';
 
 export const UsersPage = () => {
   const { data, isFetching } = useGetAllUsersQuery();
+  const [searchParams] = useSearchParams();
+  const page = searchParams.get('page');
 
+  const lastPage = (Number(page) || 1) * USERS_PAGINATION;
+
+  const users = data?.slice(lastPage - USERS_PAGINATION, lastPage);
+  console.log(users);
   return (
     <main className={styles.page}>
       <header>
@@ -37,7 +46,9 @@ export const UsersPage = () => {
         </button>
       </div>
 
-      <TableCard data={data} isFetching={isFetching} />
+      <TableCard data={users} isFetching={isFetching} />
+
+      <Pagination total={data?.length} />
     </main>
   );
 };

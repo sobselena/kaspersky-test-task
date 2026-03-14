@@ -19,7 +19,7 @@ export const TableCard = ({ data, isFetching }: Props) => (
             </div>
           </th>
           <th>
-            <div className={styles.cell}>Сотрудники</div>
+            <div className={styles.cell}>Полное имя</div>
           </th>
           <th>
             <div className={styles.cell}>Email</div>
