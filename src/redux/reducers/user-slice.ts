@@ -3,7 +3,7 @@ import type { User } from '../../types/user';
 
 const initialState: User = {
   id: null,
-  name: '',
+  fullName: '',
   email: '',
   phone: '',
   jobType: '',
@@ -12,8 +12,12 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setId(state, { payload }: PayloadAction<{ id: string | null }>) {
+    setId(state, { payload }: PayloadAction<User>) {
       state.id = payload.id;
+      state.fullName = payload.fullName;
+      state.email = payload.email;
+      state.phone = payload.phone;
+      state.jobType = payload.jobType;
     },
   },
 });

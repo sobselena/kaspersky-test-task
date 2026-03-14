@@ -67,7 +67,7 @@ export const TableCard = ({ data, isFetching }: Props) => {
 
               <td>
                 <div className={styles.cell}>
-                  <span className={styles.userName}>{userData.name}</span>
+                  <span className={styles.userName}>{userData.fullName}</span>
                 </div>
               </td>
 

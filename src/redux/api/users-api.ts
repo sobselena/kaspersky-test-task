@@ -23,9 +23,26 @@ export const usersApi = createApi({
         try {
           await queryFulfilled;
           singleToast(`Вжух и сотрудник внезапно бесследно исчез (˶ᵔ ᵕ ᵔ˶)`, 'success');
-        } catch (apiError) {
-          console.error(apiError);
+        } catch {
           singleToast('Партия не смогла избавиться от сотрудника ( •̀ ᴖ •́ )', 'error');
+        }
+      },
+
+      invalidatesTags: ['Users'],
+    }),
+    creaetUser: builder.mutation<void, Omit<User, 'id'>>({
+      query: (userData) => ({
+        url: `users`,
+        method: 'POST',
+        body: userData,
+      }),
+
+      onQueryStarted: async (_, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+          singleToast('У вас появился новый сотрудник, получается ฅᨐฅ');
+        } catch {
+          singleToast('Нe базированный сотрудник, получается (╥﹏╥)');
         }
       },
 
@@ -34,4 +51,4 @@ export const usersApi = createApi({
   }),
 });
 
-export const { useGetAllUsersQuery, useDeleteUserMutation } = usersApi;
+export const { useGetAllUsersQuery, useDeleteUserMutation, useCreaetUserMutation } = usersApi;

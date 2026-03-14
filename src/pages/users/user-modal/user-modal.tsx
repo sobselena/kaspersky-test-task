@@ -4,14 +4,13 @@ import { useForm } from 'react-hook-form';
 import { userSchema } from './user.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormRow } from '../form-row';
+import { useCreaetUserMutation } from '../../../redux/api';
+import type { User } from '../../../types/user';
 type Props = {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
 };
-function onSubmit() {
-  console.log('submit');
-}
 
 export const UserModal = ({ isOpen, onClose, title = 'Сотрудник' }: Props) => {
   const {
@@ -21,7 +20,11 @@ export const UserModal = ({ isOpen, onClose, title = 'Сотрудник' }: Pro
   } = useForm({
     resolver: zodResolver(userSchema),
   });
-
+  const [createUser] = useCreaetUserMutation();
+  async function onSubmit(data: Omit<User, 'id'>) {
+    await createUser(data);
+    onClose();
+  }
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title}>
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
