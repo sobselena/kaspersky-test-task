@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { User } from '../../types/user';
+import { singleToast } from '../../utils/single-toast';
 
 export const usersApi = createApi({
   reducerPath: 'usersApi',
@@ -20,10 +21,11 @@ export const usersApi = createApi({
 
       onQueryStarted: async (_, { queryFulfilled }) => {
         try {
-          const { data } = await queryFulfilled;
-          console.log(data);
+          await queryFulfilled;
+          singleToast(`Вжух и сотрудник внезапно бесследно исчез (˶ᵔ ᵕ ᵔ˶)`, 'success');
         } catch (apiError) {
           console.error(apiError);
+          singleToast('Партия не смогла избавиться от сотрудника ( •̀ ᴖ •́ )', 'error');
         }
       },
 
