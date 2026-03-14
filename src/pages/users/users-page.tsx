@@ -1,5 +1,6 @@
 import { useGetAllUsersQuery } from '../../redux/api';
 import { TableCard } from './components/table-card';
+import { JobSelector } from './job-selector';
 import styles from './users-page.module.scss';
 
 export const UsersPage = () => {
@@ -26,14 +27,7 @@ export const UsersPage = () => {
           />
         </div>
 
-        <select className={styles.filter}>
-          <option value="all">Все группы</option>
-          <option value="accounting">Менеджер</option>
-          <option value="accounting">Teamlead</option>
-          <option value="accounting">Backend</option>
-          <option value="it">Frontend</option>
-          <option value="accounting">Дизайнер</option>
-        </select>
+        <JobSelector data={data} />
 
         <button className={styles.addButton}>
           <svg className={styles.icon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
