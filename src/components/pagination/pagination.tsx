@@ -1,6 +1,7 @@
 import { useSearchParams } from 'react-router';
 import styles from './pagination.module.scss';
 import { USERS_PAGINATION } from '../../constants/pagination';
+import { useEffect } from 'react';
 
 type Props = {
   total?: number;
@@ -16,7 +17,15 @@ export const Pagination = ({ total = 0 }: Props) => {
     setSearchParams({ page: String(page) });
   };
 
-  if (totalPages <= 1) return null;
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setSearchParams({ page: String(totalPages) });
+    }
+
+    if (totalPages < 1) {
+      setSearchParams({ page: '1' });
+    }
+  }, [setSearchParams, currentPage, totalPages]);
 
   return (
     <div className={styles.pagination}>
