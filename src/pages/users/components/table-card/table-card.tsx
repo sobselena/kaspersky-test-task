@@ -7,6 +7,7 @@ import { useDeleteUserMutation } from '../../../../redux/api';
 import { useDispatch } from 'react-redux';
 import { setUser, toggle } from '../../../../redux/reducers';
 import { useSelectedSelector } from '../../../../redux/selectors/selected-selector';
+import type { ChangeEvent } from 'react';
 
 type Props = {
   data: User[] | undefined;
@@ -22,11 +23,31 @@ export const TableCard = ({ data, isFetching, openModal }: Props) => {
     await deleteUser(id);
   };
   const dispatch = useDispatch();
+  const { usersIds } = useSelectedSelector();
   const onEdit = (userData: User) => {
     dispatch(setUser(userData));
     openModal();
   };
-  const { usersIds } = useSelectedSelector();
+  const onCheckboxClick = (e: ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked;
+    if (!data) return;
+    if (checked) {
+      for (const { id } of data) {
+        if (!id) continue;
+        if (!usersIds.includes(id)) {
+          dispatch(toggle({ id }));
+        }
+      }
+    } else {
+      for (const { id } of data) {
+        if (!id) continue;
+        if (usersIds.includes(id)) {
+          dispatch(toggle({ id }));
+        }
+      }
+    }
+  };
+
   return (
     <div className={styles.tableCard}>
       <table className={styles.table}>
@@ -34,7 +55,12 @@ export const TableCard = ({ data, isFetching, openModal }: Props) => {
           <tr>
             <th className={styles.checkboxCell}>
               <div className={styles.cell}>
-                <input type="checkbox" className={styles.checkbox} />
+                <input
+                  type="checkbox"
+                  className={styles.checkbox}
+                  onChange={onCheckboxClick}
+                  checked={usersIds.length === data?.length}
+                />
               </div>
             </th>
             <th>

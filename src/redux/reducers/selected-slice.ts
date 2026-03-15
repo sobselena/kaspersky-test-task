@@ -21,7 +21,7 @@ const selectedSlice = createSlice({
     },
 
     deleteAllIds(state) {
-      state.usersIds = initialState.usersIds;
+      state.usersIds = [];
     },
   },
 });
