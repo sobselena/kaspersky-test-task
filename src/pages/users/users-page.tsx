@@ -8,15 +8,27 @@ import { useState, type ChangeEvent } from 'react';
 import { UserModal } from './user-modal/user-modal';
 import { useDispatch } from 'react-redux';
 import { deleteUser } from '../../redux/reducers';
+import { useSearchParams } from 'react-router';
+import { USERS_PAGINATION } from '../../constants/pagination';
 
 export const UsersPage = () => {
   const { data, isFetching } = useGetAllUsersQuery();
+
   const [openModal, setOpenModal] = useState(false);
   const [search, setSearch] = useState('');
 
   const users = data?.filter(({ fullName }) =>
     fullName.toLowerCase().includes(search.toLowerCase())
   );
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = Number(searchParams.get('page')) || 1;
+
+  const start = (page - 1) * USERS_PAGINATION;
+  const end = start + USERS_PAGINATION;
+
+  const paginatedUsers = users?.slice(start, end);
+
   console.log(users);
   const dispatch = useDispatch();
   function onAdd() {
@@ -26,6 +38,7 @@ export const UsersPage = () => {
 
   function onSearch(e: ChangeEvent<HTMLInputElement>) {
     setSearch(e.target.value);
+    setSearchParams({ page: '1' });
   }
 
   return (
@@ -61,7 +74,11 @@ export const UsersPage = () => {
         </button>
       </div>
 
-      <TableCard data={users} isFetching={isFetching} openModal={() => setOpenModal(true)} />
+      <TableCard
+        data={paginatedUsers}
+        isFetching={isFetching}
+        openModal={() => setOpenModal(true)}
+      />
 
       <Pagination total={users?.length} />
 

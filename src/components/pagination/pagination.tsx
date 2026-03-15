@@ -14,18 +14,18 @@ export const Pagination = ({ total = 0 }: Props) => {
   const totalPages = Math.ceil(total / USERS_PAGINATION) || 1;
 
   const changePage = (page: number) => {
-    setSearchParams({ page: String(page) });
+    const params = new URLSearchParams(searchParams);
+    params.set('page', String(page));
+    setSearchParams(params);
   };
 
   useEffect(() => {
-    if (currentPage > totalPages && totalPages > 0) {
-      setSearchParams({ page: String(totalPages) });
+    if (currentPage > totalPages) {
+      const params = new URLSearchParams(searchParams);
+      params.set('page', String(totalPages));
+      setSearchParams(params);
     }
-
-    if (totalPages < 1) {
-      setSearchParams({ page: '1' });
-    }
-  }, [setSearchParams, currentPage, totalPages]);
+  }, [setSearchParams, currentPage, totalPages, searchParams]);
 
   return (
     <div className={styles.pagination}>
